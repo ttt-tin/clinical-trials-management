@@ -1,0 +1,85 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# IDE - JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Compiled output
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Angular
+frontend/.angular/
+frontend/dist/
+frontend/.sass-cache/
+frontend/connect.lock/
+frontend/coverage/
+frontend/libpeerconnection.log
+frontend/npm-debug.log
+frontend/yarn-error.log
+frontend/testem.log
+frontend/typings/
+
+# NestJS
+backend/dist/
+backend/coverage/
+backend/node_modules/
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Debug logs
+debug.log
+*.log
+logs/
+*.log.*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.angular/cache/
+.npm/
+.eslintcache
+
+# Build files
+*.tsbuildinfo
+.tscache/
+*.js.map
+
+# Misc
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project 

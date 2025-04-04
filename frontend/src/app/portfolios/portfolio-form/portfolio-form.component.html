@@ -1,0 +1,115 @@
+<div class="portfolio-form">
+  <div class="form-header">
+    <h1>{{ isEditMode() ? 'Edit Portfolio' : 'Add New Portfolio' }}</h1>
+  </div>
+
+  <div *ngIf="loading()" class="loading">
+    Loading...
+  </div>
+
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+
+  <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()" *ngIf="!loading()">
+    <div class="form-group">
+      <label for="title">Project Name *</label>
+      <input 
+        id="title"
+        type="text"
+        formControlName="title"
+        [class.invalid]="portfolioForm.get('title')?.invalid && portfolioForm.get('title')?.touched">
+      <div class="error-text" *ngIf="getErrorMessage('title')">
+        {{ getErrorMessage('title') }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea 
+        id="description"
+        formControlName="description"
+        rows="4">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select 
+        id="category"
+        formControlName="category"
+        [class.invalid]="portfolioForm.get('category')?.invalid && portfolioForm.get('category')?.touched">
+        <option *ngFor="let category of categories" [value]="category">
+          {{ category }}
+        </option>
+      </select>
+      <div class="error-text" *ngIf="getErrorMessage('category')">
+        {{ getErrorMessage('category') }}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="startDate">Start Date *</label>
+        <input 
+          id="startDate"
+          type="date"
+          formControlName="startDate"
+          [class.invalid]="portfolioForm.get('startDate')?.invalid && portfolioForm.get('startDate')?.touched">
+        <div class="error-text" *ngIf="getErrorMessage('startDate')">
+          {{ getErrorMessage('startDate') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="endDate">End Date *</label>
+        <input 
+          id="endDate"
+          type="date"
+          formControlName="endDate"
+          [class.invalid]="portfolioForm.get('endDate')?.invalid && portfolioForm.get('endDate')?.touched">
+        <div class="error-text" *ngIf="getErrorMessage('endDate')">
+          {{ getErrorMessage('endDate') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="progress">Progress (%) *</label>
+      <input 
+        id="progress"
+        type="number"
+        formControlName="progress"
+        min="0"
+        max="100"
+        [class.invalid]="portfolioForm.get('progress')?.invalid && portfolioForm.get('progress')?.touched">
+      <div class="error-text" *ngIf="getErrorMessage('progress')">
+        {{ getErrorMessage('progress') }}
+      </div>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input 
+          type="checkbox"
+          formControlName="isActive">
+        Portfolio is active
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn-cancel"
+        (click)="onCancel()">
+        Cancel
+      </button>
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="portfolioForm.invalid || loading()">
+        {{ isEditMode() ? 'Update' : 'Create' }}
+      </button>
+    </div>
+  </form>
+</div> 

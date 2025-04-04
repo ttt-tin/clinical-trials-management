@@ -1,0 +1,155 @@
+.investigator-list {
+  padding: 2rem;
+
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    .header-content {
+      h1 {
+        font-size: 2rem;
+        color: #2c3e50;
+        margin: 0 0 0.5rem 0;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        color: #7f8c8d;
+        margin: 0;
+        font-weight: normal;
+      }
+    }
+
+    .btn-add {
+      padding: 0.75rem 1.5rem;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: darken(#27ae60, 10%);
+      }
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: #7f8c8d;
+  }
+
+  .error-message {
+    background: #fee;
+    color: #e74c3c;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      td {
+        a {
+          color: #3498db;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        &.actions {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+
+            &.btn-edit {
+              background: #3498db;
+              color: white;
+
+              &:hover {
+                background: darken(#3498db, 10%);
+              }
+            }
+
+            &.btn-delete {
+              background: #e74c3c;
+              color: white;
+
+              &:hover {
+                background: darken(#e74c3c, 10%);
+              }
+            }
+          }
+        }
+      }
+
+      tbody tr {
+        &:hover {
+          background: #f8f9fa;
+        }
+      }
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 2rem;
+      color: #7f8c8d;
+      font-style: italic;
+    }
+  }
+
+  .list-actions {
+    display: flex;
+    justify-content: flex-start;
+
+    .btn-back {
+      padding: 0.75rem 1.5rem;
+      background: #95a5a6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: darken(#95a5a6, 10%);
+      }
+    }
+  }
+} 

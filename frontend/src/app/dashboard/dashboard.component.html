@@ -1,0 +1,129 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1>Tổng quan dự án</h1>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div class="dashboard-content" *ngIf="!loading && !error">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <h3>Tổng số dự án</h3>
+        </div>
+        <div class="stat-body">
+          <p class="stat-value">{{ stats.totalPortfolios }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <h3>Dự án đang hoạt động</h3>
+        </div>
+        <div class="stat-body">
+          <p class="stat-value">{{ stats.activePortfolios }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <h3>Tiến độ trung bình</h3>
+        </div>
+        <div class="stat-body">
+          <p class="stat-value">{{ stats.averageProgress }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Distribution -->
+    <div class="progress-section">
+      <h3>Phân bố tiến độ</h3>
+      <div class="progress-bars">
+        <div class="progress-item">
+          <div class="progress-label">Thấp (<33%)</div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-low"
+                 [style.width.%]="progressDistribution.low / stats.totalPortfolios * 100">
+              {{ progressDistribution.low }}
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-label">Trung bình (33-66%)</div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-medium"
+                 [style.width.%]="progressDistribution.medium / stats.totalPortfolios * 100">
+              {{ progressDistribution.medium }}
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div class="progress-label">Cao (>66%)</div>
+          <div class="progress-bar">
+            <div class="progress-fill progress-high"
+                 [style.width.%]="progressDistribution.high / stats.totalPortfolios * 100">
+              {{ progressDistribution.high }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase Distribution -->
+    <div class="phase-section">
+      <h3>Phân bố theo giai đoạn</h3>
+      <div class="phase-grid">
+        <div class="phase-item" *ngFor="let phase of stats.portfoliosByPhase | keyvalue">
+          <div class="phase-name">{{ phase.key }}</div>
+          <div class="phase-count">{{ phase.value }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Updates -->
+    <div class="recent-section">
+      <h3>Cập nhật gần đây</h3>
+      <div class="recent-list">
+        <div class="recent-item" *ngFor="let portfolio of recentPortfolios">
+          <div class="portfolio-info">
+            <h4>{{ portfolio.title }}</h4>
+            <p>{{ portfolio.description }}</p>
+          </div>
+          <div class="portfolio-meta">
+            <span class="portfolio-category">{{ portfolio.category }}</span>
+            <span class="portfolio-progress" [class]="getProgressClass(portfolio.progress)">
+              {{ portfolio.progress }}%
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recent-activity">
+      <h3>Recent Activity</h3>
+      <div class="activity-list">
+        <div class="activity-item">
+          <span class="activity-date">Apr 3, 2024</span>
+          <span class="activity-desc">New trial started: Phase III Cancer Study</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-date">Apr 2, 2024</span>
+          <span class="activity-desc">Investigator Dr. Smith added to Portfolio A</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-date">Apr 1, 2024</span>
+          <span class="activity-desc">Trial completed: Diabetes Prevention Study</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

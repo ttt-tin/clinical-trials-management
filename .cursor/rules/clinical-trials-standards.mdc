@@ -1,0 +1,263 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+Description: Core standards for the Clinical Trials Portfolio Management app, ensuring clean code and clean architecture for Angular 14 frontend and NestJS 11 backend, with global rules applied universally.
+Globs: **/*.{ts,js}
+---
+
+# Project Overview
+You are an expert full-stack developer tasked with building a Clinical Trials Portfolio Management web app. The app manages Portfolios and Investigators with CRUD operations, using:
+- **Frontend**: Angular 14 with Standalone Components, Typed Reactive Forms, and a Signals-like approach via RxJS (since Signals are not native until Angular 16).
+- **Backend**: NestJS 11 with Sequelize (SQLite), OpenAPI for API documentation.
+- **Database**: SQLite with tables for:
+  - `Portfolio`: id (auto-incremented int), title (string, unique), description (string), category (enum: "Phase 1", "Phase 2", "Phase 3", "Other"), isActive (boolean), progress (int 0-100), tags (array of strings), createdAt (timestamp), updatedAt (timestamp).
+  - `Investigator`: id (auto-incremented int), name (string), email (string, unique), specialty (string), portfolioId (foreign key to Portfolio).
+
+# Global Rules
+These rules apply to all code generation across the project:
+- Always output responses in English and begin with "Hi Boss Việt".
+- Use Python instead of bash scripts for any scripting tasks; execute with `python3` CLI (e.g., `python3 script.py`).
+- Use `pnpm` for package management and `pnpx` for running scripts (e.g., `pnpm install`, `pnpx nest new backend`), never `npm` or `npx`.
+- Generate files in their correct locations based on the project structure (e.g., frontend components in `frontend/src/app/`, backend entities in `backend/src/portfolio/entities/`).
+- Do not generate comments in source code unless explicitly requested; rely on self-documenting code.
+- Separate mock data into dedicated files (e.g., `frontend/src/mocks/portfolios.ts`, `backend/src/mocks/investigators.ts`) rather than mixing with source code.
+- Keep code clean: eliminate redundant code, unused variables, or duplicate logic.
+- Apply best practices: use optimal solutions (e.g., async/await over callbacks), follow framework conventions, and prioritize maintainability.
+
+# Coding Standards
+## General Principles
+- Follow **SOLID** principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.
+- Use **DRY** (Don’t Repeat Yourself): Extract reusable logic into functions, services, or utilities.
+- Write **self-documenting code**: Use meaningful names (e.g., `portfolioService` over `pSrv`).
+- Keep functions small and focused (max 10-15 lines).
+- Use TypeScript’s strong typing everywhere; avoid `any`.
+
+## Frontend (Angular 14)
+- **Components**: Use Standalone Components with `standalone: true`. Example:
+  ```typescript
+  import { Component } from '@angular/core';
+  @Component({
+    standalone: true,
+    selector: 'app-portfolio-list',
+    template: '<div *ngFor="let p of portfolios | async">{{ p.title }}</div>'
+  })
+  export class PortfolioListComponent {
+    portfolios = new BehaviorSubject<Portfolio[]>([]);
+  }
+  ```
+- **Forms**: Use Typed Reactive Forms with strict typing:
+  ```typescript
+  import { FormControl, FormGroup, Validators } from '@angular/forms';
+  interface PortfolioForm {
+    title: FormControl<string>;
+    progress: FormControl<number>;
+  }
+  const portfolioForm = new FormGroup<PortfolioForm>({
+    title: new FormControl<string>('', [Validators.required, Validators.maxLength(100)]),
+    progress: new FormControl<number>(0, [Validators.required, Validators.min(0), Validators.max(100)])
+  });
+  ```
+- **State**: Since Signals are not available in Angular 14, use RxJS BehaviorSubject for reactive state management:
+  ```typescript
+  import { BehaviorSubject } from 'rxjs';
+  const selectedPortfolio = new BehaviorSubject<Portfolio | null>(null);
+  // Update: selectedPortfolio.next(portfolio);
+  // Subscribe: selectedPortfolio.subscribe(p => console.log('Selected:', p));
+  ```
+- **Services**: Create injectable services for HTTP calls (e.g., `PortfolioService`) with typed responses using RxJS Observables.
+- **Structure**: Organize by feature (e.g., `src/app/portfolios/portfolio-list.component.ts`).
+- **Validation**: Enforce required fields client-side with real-time feedback using form controls.
+
+## Backend (NestJS 11)
+- **Clean Architecture**:
+  - **Entities**: Define Sequelize models in `entities/` with proper typing and relationships:
+    ```typescript
+    import { Column, Model, Table, ForeignKey, DataType } from 'sequelize-typescript';
+    @Table({ tableName: 'portfolios' })
+    export class Portfolio extends Model {
+      @Column({ primaryKey: true, autoIncrement: true })
+      id: number;
+
+      @Column({ allowNull: false, unique: true })
+      title: string;
+
+      @Column({ allowNull: true })
+      description: string;
+
+      @Column({ allowNull: false, type: DataType.ENUM('Phase 1', 'Phase 2', 'Phase 3', 'Other') })
+      category: string;
+
+      @Column({ allowNull: false, defaultValue: true })
+      isActive: boolean;
+
+      @Column({ allowNull: false, type: DataType.INTEGER, validate: { min: 0, max: 100 } })
+      progress: number;
+
+      @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: true })
+      tags: string[];
+
+      @Column({ allowNull: false, defaultValue: DataType.NOW })
+      createdAt: Date;
+
+      @Column({ allowNull: false, defaultValue: DataType.NOW, onUpdate: DataType.NOW })
+      updatedAt: Date;
+    }
+
+    @Table({ tableName: 'investigators' })
+    export class Investigator extends Model {
+      @Column({ primaryKey: true, autoIncrement: true })
+      id: number;
+
+      @Column({ allowNull: false })
+      name: string;
+
+      @Column({ allowNull: false, unique: true })
+      email: string;
+
+      @Column({ allowNull: false })
+      specialty: string;
+
+      @ForeignKey(() => Portfolio)
+      @Column({ allowNull: false })
+      portfolioId: number;
+    }
+    ```
+  - **DTOs**: Use Data Transfer Objects in `dtos/` for input validation with `class-validator`:
+    ```typescript
+    import { IsString, IsBoolean, IsInt, Min, Max, IsEnum, IsArray, IsOptional } from 'class-validator';
+    export class CreatePortfolioDto {
+      @IsString() @IsString({ message: 'Title is required' })
+      title: string;
+
+      @IsOptional() @IsString()
+      description?: string;
+
+      @IsString() @IsEnum(['Phase 1', 'Phase 2', 'Phase 3', 'Other'])
+      category: string;
+
+      @IsBoolean()
+      isActive: boolean;
+
+      @IsInt() @Min(0) @Max(100)
+      progress: number;
+
+      @IsOptional() @IsArray() @IsString({ each: true })
+      tags?: string[];
+    }
+    ```
+  - **Services**: Implement business logic in `services/` with dependency injection:
+    ```typescript
+    import { Injectable, BadRequestException } from '@nestjs/common';
+    import { InjectModel } from '@nestjs/sequelize';
+    import { Portfolio } from './entities/portfolio.entity';
+    @Injectable()
+    export class PortfolioService {
+      constructor(@InjectModel(Portfolio) private portfolioModel: typeof Portfolio) {}
+
+      async create(dto: CreatePortfolioDto): Promise<Portfolio> {
+        const existing = await this.portfolioModel.findOne({ where: { title: dto.title } });
+        if (existing) throw new BadRequestException('Portfolio title already exists');
+        return this.portfolioModel.create(dto);
+      }
+
+      async findAll(): Promise<Portfolio[]> {
+        return this.portfolioModel.findAll();
+      }
+    }
+    ```
+  - **Controllers**: Define RESTful endpoints in `controllers/` with Swagger annotations:
+    ```typescript
+    import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+    import { ApiTags, ApiResponse } from '@nestjs/swagger';
+    import { PortfolioService } from './portfolio.service';
+    import { CreatePortfolioDto } from './dtos/create-portfolio.dto';
+    @ApiTags('portfolios')
+    @Controller('portfolios')
+    export class PortfolioController {
+      constructor(private readonly portfolioService: PortfolioService) {}
+
+      @Post()
+      @ApiResponse({ status: 201, description: 'Portfolio created' })
+      create(@Body() dto: CreatePortfolioDto) {
+        return this.portfolioService.create(dto);
+      }
+
+      @Get()
+      @ApiResponse({ status: 200, description: 'List of portfolios' })
+      findAll() {
+        return this.portfolioService.findAll();
+      }
+    }
+    ```
+  - **Modules**: Tie components together in `modules/` (e.g., `portfolio.module.ts`):
+    ```typescript
+    import { Module } from '@nestjs/common';
+    import { SequelizeModule } from '@nestjs/sequelize';
+    import { PortfolioController } from './portfolio.controller';
+    import { PortfolioService } from './portfolio.service';
+    import { Portfolio } from './entities/portfolio.entity';
+    @Module({
+      imports: [SequelizeModule.forFeature([Portfolio])],
+      controllers: [PortfolioController],
+      providers: [PortfolioService],
+    })
+    export class PortfolioModule {}
+    ```
+
+- **Database**: Use SQLite with Sequelize; configure in `database.module.ts`:
+  ```typescript
+  import { Module } from '@nestjs/common';
+  import { SequelizeModule } from '@nestjs/sequelize';
+  import { Portfolio } from '../portfolio/entities/portfolio.entity';
+  import { Investigator } from '../investigator/entities/investigator.entity';
+  @Module({
+    imports: [SequelizeModule.forRoot({
+      dialect: 'sqlite',
+      storage: 'clinical_trials.db',
+      models: [Portfolio, Investigator],
+      autoLoadModels: true,
+      synchronize: true,
+    })]
+  })
+  export class DatabaseModule {}
+  ```
+
+- **OpenAPI**: Enable Swagger with detailed endpoint descriptions in `main.ts`:
+  ```typescript
+  import { NestFactory } from '@nestjs/core';
+  import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+  import { AppModule } from './app.module';
+  async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+    const config = new DocumentBuilder()
+      .setTitle('Clinical Trials API')
+      .setDescription('API for managing clinical trial portfolios and investigators')
+      .setVersion('1.0')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+    await app.listen(3000);
+  }
+  bootstrap();
+  ```
+
+- **Validation**: Enforce constraints server-side (e.g., unique title, progress 0-100).
+
+# Guidelines
+- **Error Handling**: Use try-catch in services; throw NestJS exceptions (e.g., `BadRequestException`).
+- **Modularity**: Keep database logic in services, not controllers.
+
+# Example Workflow
+- **Add a Portfolio**:
+  1. Frontend: Generate a Standalone Component with a Typed Reactive Form in `frontend/src/app/portfolios/`.
+  2. Backend: Create a POST endpoint with DTO validation and Sequelize insertion in `backend/src/portfolio/`.
+  3. Use `pnpm install` to manage dependencies.
+
+# References
+- Frontend examples: `@frontend/src/app/portfolios`.
+- Backend entities: `@backend/src/portfolio/entities`.
+- Mock data: `@frontend/src/mocks`, `@backend/src/mocks`.
+```

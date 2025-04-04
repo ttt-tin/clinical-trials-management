@@ -1,0 +1,70 @@
+<div class="investigator-list">
+  <div class="list-header">
+    <div class="header-content">
+      <h1>Danh sách nhà nghiên cứu</h1>
+      <h2 *ngIf="portfolio()">Dự án: {{ portfolio()?.title }}</h2>
+    </div>
+    <button 
+      class="btn-add" 
+      [routerLink]="['/portfolios', portfolio()?.id, 'investigators', 'create']"
+      *ngIf="portfolio()">
+      Thêm nhà nghiên cứu
+    </button>
+  </div>
+
+  <div *ngIf="loading()" class="loading">
+    Đang tải dữ liệu...
+  </div>
+
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+
+  <div class="table-container" *ngIf="!loading() && !error()">
+    <table *ngIf="sortedInvestigators().length > 0">
+      <thead>
+        <tr>
+          <th>Tên</th>
+          <th>Email</th>
+          <th>Chuyên môn</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let investigator of sortedInvestigators()">
+          <td>{{ investigator.name }}</td>
+          <td>
+            <a [href]="'mailto:' + investigator.email">
+              {{ investigator.email }}
+            </a>
+          </td>
+          <td>{{ investigator.specialty }}</td>
+          <td class="actions">
+            <button 
+              class="btn-edit"
+              [routerLink]="['/portfolios', portfolio()?.id, 'investigators', investigator.id, 'edit']">
+              Sửa
+            </button>
+            <button 
+              class="btn-delete"
+              (click)="deleteInvestigator(investigator.id)">
+              Xóa
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="sortedInvestigators().length === 0" class="no-data">
+      Chưa có nhà nghiên cứu nào trong dự án này.
+    </div>
+  </div>
+
+  <div class="list-actions" *ngIf="!loading() && !error()">
+    <button 
+      class="btn-back"
+      [routerLink]="['/portfolios']">
+      Quay lại danh sách dự án
+    </button>
+  </div>
+</div> 

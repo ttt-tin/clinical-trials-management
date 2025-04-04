@@ -1,0 +1,78 @@
+<div class="portfolio-list">
+  <div class="portfolio-header">
+    <h1>Portfolio List</h1>
+    <div class="filter-section">
+      <label for="category">Filter by category:</label>
+      <select 
+        id="category" 
+        class="category-select"
+        [(ngModel)]="selectedCategory"
+        (change)="onCategoryChange()">
+        <option value="">All categories</option>
+        <option *ngFor="let category of categories" [value]="category">
+          {{category}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Loading...
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{error}}
+  </div>
+
+  <table class="portfolio-table" *ngIf="!loading && !error">
+    <thead>
+      <tr>
+        <th>Project Name</th>
+        <th>Category</th>
+        <th>Progress</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="portfolios.length === 0">
+        <td colspan="6" class="no-data">No portfolios found</td>
+      </tr>
+      <tr *ngFor="let portfolio of portfolios">
+        <td>{{portfolio.name}}</td>
+        <td>
+          <span class="category-badge">{{portfolio.category}}</span>
+        </td>
+        <td>
+          <div class="progress-container">
+            <div class="progress-bar" 
+                 [class]="getProgressClass(portfolio.progress)"
+                 [style.width.%]="portfolio.progress">
+              {{portfolio.progress}}%
+            </div>
+          </div>
+        </td>
+        <td>{{portfolio.startDate | date:'dd/MM/yyyy'}}</td>
+        <td>{{portfolio.endDate | date:'dd/MM/yyyy'}}</td>
+        <td class="actions">
+          <button class="btn-view" [routerLink]="['/portfolios', portfolio.id]">
+            View
+          </button>
+          <button class="btn-edit" [routerLink]="['/portfolios', portfolio.id, 'edit']">
+            Edit
+          </button>
+          <button class="btn-delete" (click)="deletePortfolio(portfolio.id)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="portfolio-actions">
+    <button class="btn-create" routerLink="/portfolios/create">
+      Add New Portfolio
+    </button>
+  </div>
+</div> 
