@@ -30,31 +30,38 @@ git clone <repository-url>
 cd clinical-trials-management
 ```
 
-2. Install frontend dependencies:
+2. Install all dependencies:
 ```bash
+# Install frontend dependencies
 cd frontend
 pnpm install
-```
 
-3. Install backend dependencies:
-```bash
+# Install backend dependencies
 cd ../backend
 pnpm install
 ```
 
-4. Start the backend:
+### Running the Application
+
+You'll need to open two terminal windows to run both the frontend and backend servers:
+
+**Terminal 1 - Backend Server:**
 ```bash
 cd backend
 pnpm start:dev
 ```
+The backend server will start at `http://localhost:3000`
 
-5. Start the frontend (in a new terminal):
+**Terminal 2 - Frontend Server:**
 ```bash
 cd frontend
 pnpm start
 ```
+The frontend application will be available at `http://localhost:4200`
 
-6. Access the application at `http://localhost:4200`
+Now you can access:
+- Frontend application: `http://localhost:4200`
+- API documentation: `http://localhost:3000/api`
 
 ## Project Structure
 
