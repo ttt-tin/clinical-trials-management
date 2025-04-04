@@ -5,11 +5,11 @@ A modern web application for managing clinical trials, portfolios, and investiga
 ## Technologies Used
 
 ### Frontend
-- Angular 14
+- Angular 19 (upgraded from Angular 9 to support modern features like Signals)
 - PrimeNG UI Components
 - TypeScript
 - SCSS
-- RxJS
+- RxJS with Signals
 
 ### Backend
 - NestJS 11
@@ -80,41 +80,73 @@ clinical-trials-management/
 
 ## Development Process with AI
 
-This project was developed with the assistance of Claude (Anthropic) through Cursor IDE. Here's the main workflow:
+This project was developed using a systematic approach with modern AI tools:
 
-1. **Initial Setup**
-   - Created basic project structure
-   - Configured development environment
-   - Set up necessary tools and libraries
+1. **Research & Requirements Analysis with Grok**
+   - Used Grok's research capabilities to analyze similar clinical trial management systems
+   - Defined detailed functional requirements
+   - Identified technical requirements and constraints
+   - Created a comprehensive feature list and acceptance criteria
+   - Generated Cursor AI rules file (`clinical-trials-standards.mdc`):
+     * Defined coding standards for Angular 19 and NestJS
+     * Established database schema and relationships
+     * Set up project structure guidelines
+     * Created component and service templates
+     * Configured TypeScript and linting rules
+     * Documented best practices and conventions
+     * Automated code quality enforcement
+     * Standardized error handling patterns
+     * Defined testing requirements
 
-2. **Feature Development**
-   - Created models and DTOs
-   - Built UI components
-   - Implemented business logic
-   - Integrated API endpoints
+2. **Project Planning & Architecture**
+   - Developed technical architecture blueprint
+   - Created database schema design
+   - Defined API endpoints structure
+   - Planned UI/UX wireframes
+   - Set up project milestones and timeline
 
-3. **UI/UX Enhancement**
-   - Integrated PrimeNG components
-   - Customized themes and styles
-   - Optimized layout and responsive design
+3. **Development with Cursor IDE & Claude**
+   - **Initial Setup**
+     * Created basic project structure
+     * Configured development environment
+     * Set up necessary tools and libraries
 
-4. **Testing and Debugging**
-   - Handled validation errors
-   - Fixed type mismatches
-   - Improved error handling
+   - **Feature Development**
+     * Created models and DTOs
+     * Built UI components
+     * Implemented business logic
+     * Integrated API endpoints
 
-5. **Optimization**
-   - Enhanced performance
-   - Refactored code for maintainability
-   - Added documentation
+   - **UI/UX Enhancement**
+     * Integrated PrimeNG components
+     * Customized themes and styles
+     * Optimized layout and responsive design
 
-AI assisted with:
-- Code generation and modification
-- Debugging and error fixing
-- UI/UX improvements
-- Performance optimization
-- Documentation writing
-- Best practices suggestions
+   - **Testing and Debugging**
+     * Handled validation errors
+     * Fixed type mismatches
+     * Improved error handling
+
+   - **Optimization**
+     * Enhanced performance
+     * Refactored code for maintainability
+     * Added documentation
+
+4. **Continuous Improvement**
+   - Regular code reviews with AI assistance
+   - Performance optimization
+   - Security enhancements
+   - Documentation updates
+
+AI Tools Contribution:
+- **Grok**: Initial research and requirement analysis
+- **Cursor IDE & Claude**: 
+  * Code generation and modification
+  * Debugging and error fixing
+  * UI/UX improvements
+  * Performance optimization
+  * Documentation writing
+  * Best practices suggestions
 
 ## API Documentation
 
